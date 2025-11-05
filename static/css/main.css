@@ -1,0 +1,111 @@
+/* static/css/main.css */
+:root {
+    /* Couleurs du Branding */
+    --color-primary: #4A8BDF; /* Bleu Clair Vif */
+    --color-accent-1: #FF4B91; /* Rose Vif */
+    --color-accent-2: #FFC72C; /* Jaune Solaire */
+    --color-text-dark: #333;
+    --color-bg-light: #F0F0F0; /* Gris Clair */
+
+    /* Polices */
+    --font-title: 'Montserrat', sans-serif;
+    --font-body: 'Inter', sans-serif;
+}
+
+/* Styles de base */
+body {
+    font-family: var(--font-body);
+    color: var(--color-text-dark);
+    background-color: var(--color-bg-light);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+h1, h2 {
+    font-family: var(--font-title);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Navigation */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #FFFFFF;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.logo {
+    font-family: var(--font-title);
+    font-size: 1.5em;
+    color: var(--color-accent-1); /* Rose Vif pour le logo */
+    text-decoration: none;
+}
+
+/* Boutons */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px; /* Coins arrondis pour un look jeune */
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--color-accent-1); /* Bouton d'action principal en Rose Vif */
+    color: #FFFFFF;
+}
+
+.btn-primary:hover {
+    background-color: #e83a7c; /* Rose Vif légèrement assombri */
+}
+
+/* static/css/main.css (À ajouter à la fin) */
+
+/* Styles généraux de formulaire */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-control-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px; /* Coins arrondis */
+    box-sizing: border-box; /* Inclut padding et bordure dans la largeur */
+    font-size: 1em;
+    font-family: var(--font-body);
+}
+
+.form-control:focus {
+    border-color: var(--color-primary);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(74, 139, 223, 0.2);
+}
+
+.text-danger {
+    color: #ff4b91; /* Utiliser notre couleur accent pour les erreurs */
+    font-size: 0.85em;
+    display: block;
+    margin-top: 3px;
+}
+
+.form-text {
+    font-size: 0.85em;
+    color: #888;
+}

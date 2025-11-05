@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Accueil{% endblock %}
+{% block content %}
+    <section class="hero-section" style="text-align: center; padding: 100px 0;">
+        <h1 style="color: var(--color-primary); font-size: 3em;">VibeZone</h1>
+        <p style="font-size: 1.5em; color: var(--color-text-dark); margin-bottom: 40px;">{{ slogan }}</p>
+        <a href="{{ url_for('register') }}" class="btn btn-primary" style="font-size: 1.2em; padding: 15px 30px;">
+            Commencer l'Aventure !
+        </a>
+        </section>
+{% endblock %}
