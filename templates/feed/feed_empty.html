@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Plus de profils{% endblock %}
+{% block content %}
+    <div style="max-width:700px;margin:80px auto;text-align:center;background:white;padding:40px;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.06);">
+        <h2 style="color:var(--color-primary); margin-bottom:8px;">Aucun profil disponible</h2>
+        <p style="color:#666; margin-bottom:20px;">Il n'y a plus de profils à afficher pour l'instant. Reviens plus tard ou consulte tes matchs.</p>
+        <p>
+            <a href="{{ url_for('matches') }}" class="btn btn-primary">Voir mes matchs</a>
+            <a href="{{ url_for('home') }}" class="btn" style="margin-left:10px">Accueil</a>
+        </p>
+    </div>
+{% endblock %}

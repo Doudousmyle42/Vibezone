@@ -6,13 +6,11 @@ from config import Config
 from extensions import db
 from flask_login import LoginManager, login_user, current_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import User, Swipe, Match # Assurez-vous d'importer Match
-from sqlalchemy import or_
-from models import Message, Match # Assurez-vous d'importer Message et Match
-from forms import MessageForm
-import secrets # Pour générer des noms de fichiers sécurisés
-from PIL import Image # Pour la manipulation d'images
-from config import Config # Pour accéder à UPLOAD_FOLDER et ALLOWED_EXTENSIONS
+import os
+import secrets
+from PIL import Image
+
+# Supprimé : imports précoces de models/forms pour éviter la circularité
 
 
 # Charge les variables d'environnement (y compris SECRET_KEY)
@@ -32,7 +30,7 @@ login_manager.login_message_category = 'info'
 login_manager.login_message = "Veuillez vous connecter pour accéder à cette page."
 
 # --- IMPORTS APRÈS INIT (évite import circulaire) ---
-from models import User, Swipe, Match
+from models import User, Swipe, Match, Message  # importe les modèles maintenant que db est initialisé
 from forms import RegistrationForm, LoginForm
 
 # --- FONCTION DE CHARGEMENT UTILISATEUR POUR FLASK-LOGIN ---
@@ -266,10 +264,7 @@ def matches():
 
 @app.route('/users/<int:user_id>')
 @login_required
-def profile(user_id):
-    """
-    Page profil utilisateur (endpoint 'profile' attendu par les templates).
-    """
+def user_profile(user_id):   # <--- renommé de 'profile' en 'user_profile'
     user = User.query.get_or_404(user_id)
     return render_template('users/profil.html', user=user)
 
@@ -316,6 +311,8 @@ def inbox():
 @app.route('/chat/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def chat(user_id):
+    from forms import MessageForm
+    form = MessageForm()
     """
     Page de conversation individuelle avec un autre utilisateur.
     """
@@ -411,9 +408,7 @@ def save_picture(form_picture):
 @app.route('/settings/picture', methods=['GET', 'POST'])
 @login_required
 def update_picture():
-    """
-    Permet à l'utilisateur de télécharger et de mettre à jour sa photo de profil.
-    """
+    from forms import UpdateProfileForm
     form = UpdateProfileForm()
     
     if form.validate_on_submit():

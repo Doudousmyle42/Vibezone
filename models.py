@@ -1,10 +1,10 @@
 # models.py
 
-# Import de 'db' depuis app.py (pour éviter l'import circulaire, l'ordre est important dans app.py)
-from app import db 
+# Remplace : from app import db
+from extensions import db
 from datetime import datetime
-from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -15,12 +15,12 @@ class User(db.Model, UserMixin):
     
     # --- 2. Infos de Profil ---
     first_name = db.Column(db.String(60), nullable=False)
-    date_of_birth = db.Column(db.Date, nullable=False)
-    city = db.Column(db.String(100), nullable=False)
+    date_of_birth = db.Column(db.Date, nullable=True)
+    city = db.Column(db.String(100), nullable=True)
     
     # NOUVEAU : Champ pour le nom de fichier de la photo principale
     # Stocke le nom du fichier (ex: 'abcdef1234.jpg')
-    image_file = db.Column(db.String(20), nullable=False, default='default.jpg') 
+    image_file = db.Column(db.String(100), nullable=False, default='default.jpg') 
     
     # --- 3. Le "Vibe Check" ---
     vibe_tags = db.Column(db.String(255), nullable=True) 
@@ -45,7 +45,7 @@ class User(db.Model, UserMixin):
         return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
-        return f"User('{self.first_name}', '{self.email}', Image: {self.image_file})"
+        return f"User('{self.first_name}', '{self.email}')"
 
 
 class Swipe(db.Model):
