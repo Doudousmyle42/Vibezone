@@ -9,6 +9,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import secrets
 from PIL import Image
+from sqlalchemy import or_   # <-- ajouté
+from datetime import date
+import json
+
 
 # Supprimé : imports précoces de models/forms pour éviter la circularité
 
@@ -370,17 +374,25 @@ def chat(user_id):
 @app.route('/profile/<int:user_id>')
 @login_required
 def profile(user_id):
-    """
-    Affiche la page de profil complète d'un utilisateur.
-    """
-    # get_or_404 est une fonction pratique qui renvoie un 404 si l'ID n'existe pas
     user = User.query.get_or_404(user_id)
-    
-    # Nous pouvons ajouter une logique ici : est-ce mon propre profil ? 
-    # Avons-nous un match ?
-    # Pour l'instant, affichons-le simplement.
-    
-    return render_template('users/profile.html', user=user)
+
+    # calcule l'âge côté serveur
+    age = None
+    if user.date_of_birth:
+        dob = user.date_of_birth
+        today = date.today()
+        age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+
+    # si vibe_tags stockées en JSON string, désérialiser en liste
+    vibe_tags = []
+    if user.vibe_tags:
+        try:
+            vibe_tags = json.loads(user.vibe_tags)
+        except Exception:
+            # si stockage simple "tag1,tag2"
+            vibe_tags = [t.strip() for t in (user.vibe_tags or "").split(',') if t.strip()]
+
+    return render_template('users/profil.html', user=user, age=age, vibe_tags=vibe_tags)
 
 # Fonction pour vérifier l'extension du fichier
 def allowed_file(filename):
