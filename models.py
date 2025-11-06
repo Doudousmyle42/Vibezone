@@ -1,25 +1,39 @@
 # models.py
 
-# IMPORTANT : L'objet 'db' sera importé depuis 'app'
-from extensions import db
+# Import de 'db' depuis app.py (pour éviter l'import circulaire, l'ordre est important dans app.py)
+from app import db 
 from datetime import datetime
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
+    
+    # --- 1. Infos d'Authentification ---
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
-    is_verified = db.Column(db.Boolean, default=False)
+    
+    # --- 2. Infos de Profil ---
     first_name = db.Column(db.String(60), nullable=False)
     date_of_birth = db.Column(db.Date, nullable=False)
     city = db.Column(db.String(100), nullable=False)
-    vibe_tags = db.Column(db.String(255), nullable=True)
+    
+    # NOUVEAU : Champ pour le nom de fichier de la photo principale
+    # Stocke le nom du fichier (ex: 'abcdef1234.jpg')
+    image_file = db.Column(db.String(20), nullable=False, default='default.jpg') 
+    
+    # --- 3. Le "Vibe Check" ---
+    vibe_tags = db.Column(db.String(255), nullable=True) 
+    
+    # --- 4. Les "Icebreakers" ---
     icebreaker_1 = db.Column(db.String(140), nullable=True)
     icebreaker_2 = db.Column(db.String(140), nullable=True)
     icebreaker_3 = db.Column(db.String(140), nullable=True)
-    date_joined = db.Column(db.DateTime, default=datetime.utcnow)
 
+    # --- 5. Sécurité et Métadonnées ---
+    is_verified = db.Column(db.Boolean, default=False) # Badge de vérification (âge/selfie)
+    date_joined = db.Column(db.DateTime, default=datetime.utcnow)
+    
     # --- Méthodes de sécurité ---
 
     def set_password(self, password):
@@ -31,25 +45,21 @@ class User(db.Model, UserMixin):
         return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
-        return f"User('{self.first_name}', '{self.email}')"
-    
-# models.py (ajouts)
+        return f"User('{self.first_name}', '{self.email}', Image: {self.image_file})"
 
-# ... (La classe User est au-dessus) ...
 
 class Swipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     
-    # L'ID de l'utilisateur qui effectue l'action (le "swiper")
+    # L'utilisateur qui swipe
     swiper_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     
-    # L'ID de l'utilisateur qui est vu (le "swiped")
+    # L'utilisateur qui est swipé
     swiped_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     
     # L'action : True pour "Like", False pour "Dislike"
     liked = db.Column(db.Boolean, nullable=False)
     
-    # Quand l'action a eu lieu
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
     def __repr__(self):
@@ -60,14 +70,24 @@ class Swipe(db.Model):
 class Match(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     
-    # L'ID du premier utilisateur dans le match
+    # Les ID des deux utilisateurs (triés pour l'unicité du match)
     user1_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    
-    # L'ID du second utilisateur dans le match
     user2_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     
-    # Quand le match a été créé
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
     def __repr__(self):
         return f'<Match {self.user1_id} and {self.user2_id}>'
+
+
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    
+    body = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<Message from {self.sender_id} to {self.recipient_id}>'

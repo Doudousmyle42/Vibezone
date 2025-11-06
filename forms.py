@@ -9,6 +9,8 @@ except ImportError:
     from wtforms.fields.html5 import DateField
 
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from flask_wtf.file import FileField, FileAllowed # NOUVEAU
+from PIL import Image
 
 class RegistrationForm(FlaskForm):
     # Authentification
@@ -40,3 +42,23 @@ class LoginForm(FlaskForm):
     password = PasswordField('Mot de passe', validators=[DataRequired()])
     remember = BooleanField('Se souvenir de moi')
     submit = SubmitField('Connexion ➡️')
+
+# forms.py (ajouts)
+
+# ... (Imports et autres classes de formulaire) ...
+from wtforms import TextAreaField
+from wtforms.validators import DataRequired, Length
+
+class MessageForm(FlaskForm):
+    body = TextAreaField('Message', validators=[
+        DataRequired(), 
+        Length(min=1, max=500)
+    ])
+    submit = SubmitField('Envoyer')
+
+class UpdateProfileForm(FlaskForm):
+    # Champ de téléchargement d'image
+    picture = FileField("Téléverser une photo de profil (JPG/PNG)", validators=[
+        FileAllowed(['jpg', 'png', 'jpeg'], 'Seules les images JPG, PNG sont autorisées.')
+    ])
+    submit = SubmitField('Enregistrer la photo')

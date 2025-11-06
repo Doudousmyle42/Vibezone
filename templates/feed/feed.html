@@ -4,6 +4,11 @@
 {% block content %}
 <div class="feed-container" style="display: flex; justify-content: center; align-items: center; padding-top: 40px;">
 
+    {% include 'users/profile_card.html' with context %}
+
+</div>
+<div class="feed-container" style="display: flex; justify-content: center; align-items: center; padding-top: 40px;">
+
     <div class="profile-card" style="width: 350px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); overflow: hidden;">
         
         <div class="profile-image" style="height: 400px; background-color: var(--color-bg-light); display:flex; align-items:center; justify-content:center; font-size: 5em;">

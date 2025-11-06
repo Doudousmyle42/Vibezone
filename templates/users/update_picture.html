@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Photo de Profil{% endblock %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 50px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+    <h2 style="color: var(--color-accent-1); text-align: center;">Mettre à jour ma photo</h2>
+    <hr style="border-color: var(--color-bg-light);">
+
+    <div style="text-align: center; margin-bottom: 20px;">
+        <img src="{{ image_url }}" alt="Photo de profil actuelle" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid var(--color-primary);">
+    </div>
+
+    <form method="POST" action="" enctype="multipart/form-data">
+        {{ form.hidden_tag() }} 
+
+        <div class="form-group">
+            {{ form.picture.label(class="form-control-label") }}
+            <br>
+            {{ form.picture(class="form-control-file") }}
+            {% for error in form.picture.errors %}
+                <small class="text-danger">{{ error }}</small>
+            {% endfor %}
+        </div>
+        
+        <div class="form-group" style="margin-top: 30px; text-align: center;">
+            {{ form.submit(class="btn btn-primary btn-lg") }}
+        </div>
+    </form>
+</div>
+{% endblock %}

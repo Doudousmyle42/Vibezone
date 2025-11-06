@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}{{ user.first_name }}'s Profil{% endblock %}
+
+{% block content %}
+<div class="profile-page-container" style="max-width: 800px; margin: 30px auto; background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden;">
+    
+    <div class="profile-header" style="height: 300px; position: relative;">
+        <img src="{{ url_for('static', filename='profile_pics/' + user.image_file) }}" 
+             alt="Photo de profil de {{ user.first_name }}" 
+             style="width: 100%; height: 100%; object-fit: cover;">
+
+        {% if user.is_verified %}
+        <span style="position: absolute; bottom: 10px; right: 10px; background: var(--color-accent-2); color: white; padding: 8px 15px; border-radius: 20px; font-size: 1em; font-weight: bold;">
+            ✨ Profil Vérifié
+        </span>
+        {% endif %}
+    </div>
+    
+    <div class="profile-details" style="padding: 30px;">
+        <h1 style="font-family: var(--font-title); color: var(--color-primary); margin-top: 0;">
+            {{ user.first_name }}
+            <span style="font-weight: 400; color: #555; font-size: 0.8em;">
+                ({{ ( (datetime.utcnow().date() - user.date_of_birth).days // 365 ) }} ans)
+            </span>
+        </h1>
+        <p style="font-size: 1.2em; color: #777; margin-top: -10px;">
+            📍 Habite à {{ user.city }}
+        </p>
+
+        <hr style="border: 0; border-top: 1px solid var(--color-bg-light); margin: 20px 0;">
+
+        <h3 style="color: var(--color-accent-1);">Vibe Check:</h3>
+        <div class="tags-container" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+            <span style="background: var(--color-bg-light); padding: 5px 10px; border-radius: 15px;">Gaming 🎮</span>
+            <span style="background: var(--color-bg-light); padding: 5px 10px; border-radius: 15px;">Netflix 🎬</span>
+            <span style="background: var(--color-bg-light); padding: 5px 10px; border-radius: 15px;">Musique 🎵</span>
+        </div>
+
+        <h3 style="color: var(--color-accent-1);">Icebreakers:</h3>
+        <div class="icebreakers-full">
+            <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                <strong>Mon son préféré est...</strong>
+                <p style="margin: 5px 0 0 0;">{{ user.icebreaker_1 or "Pas encore défini." }}</p>
+            </div>
+            <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                <strong>Je suis obsédé par...</strong>
+                <p style="margin: 5px 0 0 0;">{{ user.icebreaker_2 or "Pas encore défini." }}</p>
+            </div>
+            <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                <strong>Mon pire talent caché est...</strong>
+                <p style="margin: 5px 0 0 0;">{{ user.icebreaker_3 or "Pas encore défini." }}</p>
+            </div>
+        </div>
+        
+        {% if current_user.id == user.id %}
+            <a href="{{ url_for('update_picture') }}" class="btn btn-primary" style="margin-top: 20px;">Mettre à jour ma photo</a>
+            <a href="#" class="btn" style="margin-top: 20px; margin-left: 10px; background: #ddd; color: #333;">Modifier mes infos</a>
+        {% elif current_user.is_authenticated %}
+            <a href="{{ url_for('chat', user_id=user.id) }}" class="btn btn-primary" style="margin-top: 20px;">Envoyer un message</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

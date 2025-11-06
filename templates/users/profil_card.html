@@ -1,0 +1,45 @@
+<div class="profile-card" style="width: 350px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); overflow: hidden;">
+    
+    <div class="profile-image" style="height: 400px; background-color: var(--color-bg-light); position: relative;">
+        <img src="{{ url_for('static', filename='profile_pics/' + user.image_file) }}" 
+            alt="Photo de profil de {{ user.first_name }}" 
+            style="width: 100%; height: 100%; object-fit: cover;">
+        
+        {% if user.is_verified %}
+        <span style="position: absolute; top: 10px; right: 10px; background: #FFC72C; color: white; padding: 5px 10px; border-radius: 15px; font-size: 0.8em; font-weight: bold;">
+            ✨ Vérifié
+        </span>
+        {% endif %}
+    </div>
+    
+    <div class="profile-info" style="padding: 20px;">
+        <h2 style="font-family: var(--font-title); color: var(--color-primary); margin-top: 0;">
+            {{ user.first_name }}, 
+            <span style="font-weight: 400; color: #555;">
+                {{ ( (datetime.utcnow().date() - user.date_of_birth).days // 365 ) }}
+            </span>
+        </h2>
+        <p style="color: #777; margin-top: -10px;">{{ user.city }}</p>
+        
+        <hr style="border: 0; border-top: 1px solid var(--color-bg-light);">
+        
+        <div class="icebreakers">
+            <p><strong>Mon son préféré est...</strong><br> {{ user.icebreaker_1 or "N/A" }}</p>
+            <p><strong>Je suis obsédé par...</strong><br> {{ user.icebreaker_2 or "N/A" }}</p>
+            <p><strong>Mon pire talent caché est...</strong><br> {{ user.icebreaker_3 or "N/A" }}</p>
+        </div>
+    </div>
+    
+    <div class="swipe-actions" style="display: flex; justify-content: space-around; padding: 20px; background-color: var(--color-bg-light);">
+        
+        <a href="{{ url_for('swipe', swiped_id=user.id, action='dislike') }}" class="btn" 
+            style="background-color: var(--color-accent-1); color: white; font-size: 2em; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+            ❌
+        </a>
+        
+        <a href="{{ url_for('swipe', swiped_id=user.id, action='like') }}" class="btn" 
+            style="background-color: #4CAF50; color: white; font-size: 2em; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+            💖
+        </a>
+    </div>
+</div>

@@ -109,3 +109,20 @@ h1, h2 {
     font-size: 0.85em;
     color: #888;
 }
+
+/* static/css/main.css (ajouts) */
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Espace entre les liens */
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--color-primary);
+    font-weight: 600;
+}
+.nav-link:hover {
+    color: var(--color-accent-1);
+}

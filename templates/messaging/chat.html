@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Chat avec {{ recipient.first_name }}{% endblock %}
+
+{% block content %}
+<div class="chat-container" style="max-width: 700px; margin: 20px auto; display: flex; flex-direction: column; height: 80vh;">
+    
+    <div class="chat-header" style="background: var(--color-primary); color: white; padding: 15px 20px; border-radius: 10px 10px 0 0; text-align: center;">
+        <h2 style="margin: 0; font-family: var(--font-title);">
+            Chat avec {{ recipient.first_name }}
+        </h2>
+    </div>
+    
+    <div class="message-area" style="flex-grow: 1; background: #fdfdfd; padding: 20px; overflow-y: auto; border: 1px solid var(--color-bg-light);">
+        
+        {% for message in messages %}
+            {% if message.sender_id == current_user.id %}
+                <div class="message-bubble sent" style="text-align: right; margin-bottom: 10px;">
+                    <div style="background: var(--color-primary); color: white; padding: 10px 15px; border-radius: 20px 20px 5px 20px; display: inline-block; max-width: 70%;">
+                        {{ message.body }}
+                        <div class="timestamp" style="font-size: 0.75em; opacity: 0.8; margin-top: 5px;">
+                            {{ message.timestamp.strftime('%H:%M') }}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="message-bubble received" style="text-align: left; margin-bottom: 10px;">
+                    <div style="background: var(--color-bg-light); color: var(--color-text-dark); padding: 10px 15px; border-radius: 20px 20px 20px 5px; display: inline-block; max-width: 70%;">
+                        {{ message.body }}
+                        <div class="timestamp" style="font-size: 0.75em; opacity: 0.8; margin-top: 5px;">
+                            {{ message.timestamp.strftime('%H:%M') }}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+        
+        {% if not messages %}
+        <p style="text-align: center; color: #999;">C'est un Vibe ! Brise la glace et envoie le premier message.</p>
+        {% endif %}
+    </div>
+    
+    <div class="message-form-area" style="padding: 15px; background: white; border-top: 1px solid var(--color-bg-light); border-radius: 0 0 10px 10px;">
+        <form method="POST" action="" style="display: flex; gap: 10px;">
+            {{ form.hidden_tag() }}
+            <div style="flex-grow: 1;">
+                {{ form.body(class="form-control", placeholder="Écris ton message...", rows="1", style="resize: none;") }}
+            </div>
+            <div>
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
